@@ -1,0 +1,56 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+"username":"Tim",
+"password":"1234"
+}
+
+###
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+"username":"Tim",
+"password":"1234"
+}
+
+###
+
+POST http://localhost:5000/api/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUyNDk3MTh9.8CkXMyrBSlXm3QmFvHqh1jOrBKbFNzL6hPUbb1R_dDU
+
+{
+"title":"third post",
+"description":"my third description",
+"url":"goole.com",
+"status": "LEARNING"
+}
+
+###
+
+GET http://localhost:5000/api/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUzMDk2NzJ9.rHPfphIsBeNdm5PasoMlhsVe5mgcriHUJUJICfHX4YI
+
+###
+
+PUT http://localhost:5000/api/posts/63da484abd86a09dc943df56
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUyNDk3MTh9.8CkXMyrBSlXm3QmFvHqh1jOrBKbFNzL6hPUbb1R_dDU
+
+{
+"title":"edit post",
+"description":"edit third description",
+"url":"dantri.com",
+"status": "LEARNING"
+}
+
+###
+
+DELETE http://localhost:5000/api/posts/63da484abd86a09dc943df56
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUyNDk3MTh9.8CkXMyrBSlXm3QmFvHqh1jOrBKbFNzL6hPUbb1R_dDU
+
