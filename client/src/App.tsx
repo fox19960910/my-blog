@@ -4,7 +4,8 @@ import Home from './pages/Home'
 import Authenication from './pages/Auth'
 import AuthContextProvider from './contexts/AuthContext'
 import DashBoard from './pages/Dashboard'
-import PrivateRoute from './Router/privateRoute'
+import PrivateRoute from './Router/PrivateRoute'
+import { SnackbarProvider } from 'notistack'
 const ScrollToTop = () => {
     const { pathname } = useLocation()
 
@@ -16,23 +17,34 @@ const ScrollToTop = () => {
 }
 function App() {
     return (
-        <AuthContextProvider>
-            <BrowserRouter>
-                <ScrollToTop />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route
-                        path="/login"
-                        element={<Authenication path="login" />}
-                    />
-                    <Route
-                        path="/register"
-                        element={<Authenication path="register" />}
-                    />
-                    <PrivateRoute path="/dashboard" element={<DashBoard />} />
-                </Routes>
-            </BrowserRouter>
-        </AuthContextProvider>
+        <SnackbarProvider
+            anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            autoHideDuration={3000}
+            maxSnack={5}
+        >
+            <AuthContextProvider>
+                <BrowserRouter>
+                    <ScrollToTop />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<PrivateRoute />}>
+                            <Route path="dashboard" element={<DashBoard />} />
+                        </Route>
+                        <Route
+                            path="/login"
+                            element={<Authenication path="login" />}
+                        />
+                        <Route
+                            path="/register"
+                            element={<Authenication path="register" />}
+                        />
+                    </Routes>
+                </BrowserRouter>
+            </AuthContextProvider>
+        </SnackbarProvider>
     )
 }
 

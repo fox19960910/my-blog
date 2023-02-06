@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
-import Box from '@mui/material/Box'
 import styled from '@emotion/styled'
+import Box from '@mui/material/Box'
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Loading from '../../components/Base/Loading'
 import LoginForm from '../../components/Form/LoginForm'
 import RegisterForm from '../../components/Form/RegisterForm'
 import { AuthContext } from '../../contexts/AuthContext'
-import Loading from '../../components/Base/Loading'
-import { useNavigate } from 'react-router-dom'
 type Props = {
     path: string
 }
@@ -16,7 +16,7 @@ function Authenication({ path }: Props) {
     if (context?.authLoading) {
         return <Loading />
     }
-    if (context?.isAuthenticated) {
+    if (context?.isAuthenticated && path === 'login') {
         navigate('/dashboard')
     }
     return (
@@ -27,6 +27,7 @@ function Authenication({ path }: Props) {
                 alignItems="center"
                 justifyContent="center"
                 height="100%"
+                flexWrap="wrap"
             >
                 {path === 'login' && <LoginForm />}
                 {path === 'register' && <RegisterForm />}

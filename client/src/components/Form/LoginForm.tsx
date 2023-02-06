@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import styled from '@emotion/styled'
 import GoogleIcon from '@mui/icons-material/Google'
 import {
@@ -9,16 +8,16 @@ import {
     Typography,
 } from '@mui/material'
 import Box from '@mui/material/Box'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../contexts/AuthContext'
 import InputFiled from '../Base/InputFiled'
 import Logo from '../Base/Logo'
-import { AuthContext } from '../../contexts/AuthContext'
-type Props = {}
 
-const LoginForm = (props: Props) => {
+const LoginForm = () => {
     const context = useContext(AuthContext)
-    const navigate = useNavigate()
+
     const form = useForm<IloginForm>({
         defaultValues: {
             email: '',
@@ -26,10 +25,9 @@ const LoginForm = (props: Props) => {
         },
     })
     const { handleSubmit, formState } = form
-    const loginSubmit = async (data: IloginForm) => {
+    const onSubmit = async (data: IloginForm) => {
         try {
             await context?.loginUser(data)
-            navigate('/dashboard')
         } catch (error) {}
     }
 
@@ -37,7 +35,7 @@ const LoginForm = (props: Props) => {
 
     console.log(formState.errors)
     return (
-        <Box>
+        <Box minWidth={300}>
             <Logo />
             <Typography mt={2} variant="h3">
                 Welcome to Admin.
@@ -51,16 +49,21 @@ const LoginForm = (props: Props) => {
             <Divider light sx={{ marginTop: '10px' }}>
                 or
             </Divider>
-            <form onSubmit={handleSubmit(loginSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Box mt={2}>
                     <Box>
-                        <InputFiled name="email" form={form} />
+                        <InputFiled
+                            name="email"
+                            form={form}
+                            rules={{ required: true }}
+                        />
                     </Box>
                     <Box mt={2}>
                         <InputFiled
                             name="password"
                             type="password"
                             form={form}
+                            rules={{ required: true }}
                         />
                     </Box>
                 </Box>

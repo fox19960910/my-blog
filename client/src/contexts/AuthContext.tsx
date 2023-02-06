@@ -2,32 +2,38 @@ import { createContext, useReducer, useEffect } from 'react'
 import { authReducer } from './reducers/authReducer'
 import axiosInstance from '../helper/axios'
 import { getStorage, removeStorage, setStorage } from '../helper/localStorage'
-import { LC_TOKEN_NAME } from './containts'
+import { LC_TOKEN_NAME, returnError } from './constants'
+import { useSnackbar } from 'notistack'
+import { MESSAGE, messge_code } from '../contants/message'
 
 type Props = {
     children: React.ReactNode
 }
 type LoginReturn = {
     success: boolean
-    message: string
+    message: messge_code
     access_token: string
 }
 type authReturn = {
     success: boolean
-    message: string
-    user: Iuser
+    message: messge_code
+    data: Iuser
 }
 export const AuthContext = createContext<
     | {
           authLoading: boolean
           isAuthenticated: boolean
           user: Iuser | null
-          loginUser: (userForm: IloginForm) => Promise<void>
+          loginUser: (userForm: IloginForm) => Promise<LoginReturn | undefined>
+          registerUser: (
+              userForm: IRegisterForm
+          ) => Promise<LoginReturn | undefined>
       }
     | undefined
 >(undefined)
 
 const AuthContextProvider = ({ children }: Props) => {
+    const { enqueueSnackbar } = useSnackbar()
     const [authState, dispatch] = useReducer(authReducer, {
         authLoading: true,
         isAuthenticated: false,
@@ -42,11 +48,13 @@ const AuthContextProvider = ({ children }: Props) => {
                 '/api/auth'
             )
             if (response.success) {
+                console.log('dispatch')
+
                 dispatch({
                     type: 'SET_AUTH',
                     payload: {
                         isAuthenticated: true,
-                        user: response.user,
+                        user: response.data,
                     },
                 })
             }
@@ -76,9 +84,48 @@ const AuthContextProvider = ({ children }: Props) => {
                 const { access_token } = response
 
                 setStorage(LC_TOKEN_NAME, access_token)
+
+                await checkAuth()
+                return response
             }
         } catch (err) {
-            console.log(err)
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
+        }
+    }
+
+    // Register
+    const registerUser = async (userForm: IRegisterForm) => {
+        try {
+            const response = await axiosInstance.post<{}, LoginReturn>(
+                'api/auth/register',
+                {
+                    username: userForm.email,
+                    password: userForm.password,
+                }
+            )
+            if (response) {
+                // const { access_token } = response
+
+                // setStorage(LC_TOKEN_NAME, access_token)
+
+                // await checkAuth()
+
+                const message = response.message
+                enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                    variant: 'success',
+                })
+                return response
+            }
+        } catch (err) {
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
         }
     }
 
@@ -89,7 +136,13 @@ const AuthContextProvider = ({ children }: Props) => {
     const { authLoading, isAuthenticated, user } = authState
     return (
         <AuthContext.Provider
-            value={{ loginUser, authLoading, isAuthenticated, user }}
+            value={{
+                loginUser,
+                authLoading,
+                isAuthenticated,
+                user,
+                registerUser,
+            }}
         >
             {children}
         </AuthContext.Provider>

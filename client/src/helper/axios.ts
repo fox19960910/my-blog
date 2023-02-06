@@ -1,4 +1,4 @@
-import { LC_TOKEN_NAME } from './../contexts/containts'
+import { LC_TOKEN_NAME } from '../contexts/constants'
 import { getStorage } from './localStorage'
 import axios from 'axios'
 
@@ -12,8 +12,6 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(async (config: any) => {
     const accessToken = getStorage(LC_TOKEN_NAME)
-    console.log('accessToken', accessToken)
-
     if (accessToken) {
         config.headers['Authorization'] = `Bearer ${accessToken}`
     }
@@ -26,7 +24,11 @@ axiosInstance.interceptors.response.use(
         return response
     },
     (error) => {
-        return Promise.reject(error)
+        if (error.response && error.response.data) {
+            return Promise.reject(error.response.data)
+        } else {
+            return Promise.reject(error.response)
+        }
     }
 )
 export default axiosInstance

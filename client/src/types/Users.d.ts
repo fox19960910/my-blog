@@ -1,4 +1,4 @@
 interface Iuser {
-    userId: string
+    _id: string
     username: string
 }

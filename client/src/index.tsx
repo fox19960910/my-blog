@@ -10,7 +10,7 @@ root.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             {/* reset css */}
-
+            <CssBaseline />
             <App />
         </ThemeProvider>
     </React.StrictMode>

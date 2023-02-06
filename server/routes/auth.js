@@ -38,7 +38,7 @@ router.post('/register', async (req, res) => {
     if (!username || !password)
         return res.status(400).json({
             success: false,
-            message: 'Missing username and/or password',
+            message: 'missing_user_password',
         })
 
     try {
@@ -48,7 +48,7 @@ router.post('/register', async (req, res) => {
         if (user)
             return res
                 .status(400)
-                .json({ success: false, message: 'Username already taken' })
+                .json({ success: false, message: 'user_already_taken' })
 
         // All good
         const hashedPassword = await argon2.hash(password)
@@ -63,7 +63,7 @@ router.post('/register', async (req, res) => {
 
         res.json({
             success: true,
-            message: 'User created successfully',
+            message: 'user_crete_succefully',
             accessToken,
         })
     } catch (error) {
@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
     if (!username || !password)
         return res.status(400).json({
             success: false,
-            message: 'Missing username and/or password',
+            message: 'missing_user_password',
         })
 
     try {
@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
         if (!user || (user && !argon2.verify(user.password, password)))
             return res.status(400).json({
                 success: false,
-                message: 'Username or password incorrect',
+                message: 'incorrect_user_password',
             })
         // all good
         const access_token = jwt.sign(
@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
         )
         res.json({
             success: true,
-            message: 'Login successfully ',
+            message: 'login_succesfully ',
             access_token,
         })
     } catch (error) {

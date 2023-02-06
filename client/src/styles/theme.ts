@@ -71,7 +71,12 @@ export const theme: ThemeOptions = createTheme({
             fontFamily: ['Open Sans', 'sans-serif'].join(','),
             fontSize: 20,
         },
+
         h4: {
+            fontFamily: ['Open Sans', 'sans-serif'].join(','),
+            fontSize: 16,
+        },
+        h5: {
             fontFamily: ['Open Sans', 'sans-serif'].join(','),
             fontSize: 14,
         },
