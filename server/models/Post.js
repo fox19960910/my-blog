@@ -12,6 +12,9 @@ const PostSchema = new Schema({
     url: {
         type: String,
     },
+    image: {
+        type: String,
+    },
     status: {
         type: String,
         enum: ['TO LEARN', 'LEARNING', 'LEARNED'],
@@ -19,6 +22,10 @@ const PostSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
+    },
+    category: {
+        type: Schema.Types.String,
+        ref: 'categories',
     },
 })
 

@@ -38,8 +38,8 @@ function Authenication({ path }: Props) {
 }
 
 const RightBg = styled(Box)`
-    background-color: #0093e9;
-    background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+    background-color: #ffb077;
+    background-image: linear-gradient(160deg, #ffb077 0%, #be3455 100%);
     border-top-left-radius: 110px;
 `
 export default Authenication

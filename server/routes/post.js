@@ -47,7 +47,7 @@ router.get('/my-post', verifyToken, async (req, res) => {
 // @access Private
 
 router.post('/', verifyToken, async (req, res) => {
-    const { title, description, url, status } = req.body
+    const { title, description, url, status, image, category } = req.body
     //Validation1
     if (!title) {
         return res
@@ -58,9 +58,11 @@ router.post('/', verifyToken, async (req, res) => {
         const newPost = new Post({
             title,
             description,
+            image,
             url: url.startsWith('https://') ? url : `https://${url}`,
             status: status || 'TO LEARN',
             user: req.userId,
+            category,
         })
         await newPost.save()
 

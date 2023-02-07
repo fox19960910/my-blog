@@ -16,7 +16,7 @@ router.get('/', verifyToken, async (req, res) => {
         if (!user) {
             return res
                 .status(400)
-                .json({ success: false, message: 'User not found' })
+                .json({ success: false, message: 'user_not_found' })
         }
         res.json({ success: true, message: 'Successfully', data: user })
     } catch (error) {

@@ -35,10 +35,14 @@ export const shades = {
         800: '#535252',
         900: '#292929',
     },
+    special: {
+        100: '#be3455',
+    },
 }
 declare module '@mui/material/styles/createPalette' {
     export interface PaletteOptions {
         neutral?: PaletteColorOptions
+        special?: PaletteColorOptions
     }
 }
 
@@ -54,6 +58,9 @@ export const theme: ThemeOptions = createTheme({
             main: shades.neutral[500],
             dark: shades.neutral[700],
             light: shades.neutral[100],
+        },
+        special: {
+            main: shades.special[100],
         },
     },
     typography: {

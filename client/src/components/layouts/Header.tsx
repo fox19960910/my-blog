@@ -13,12 +13,22 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import Logo from '../Base/Logo'
 import { AuthContext } from '../../contexts/AuthContext'
+import styled from '@emotion/styled'
+import { shades } from '../../styles/theme'
+import { useNavigate } from 'react-router-dom'
 
 const pages = ['Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+
+const SETTINGS = [
+    { action: 'profile', name: 'Profile' },
+    { action: 'account', name: 'Account' },
+    { action: 'dashboard', name: 'Dashboard' },
+    { action: 'logout', name: 'Logout' },
+]
 
 function Header() {
     const context = React.useContext(AuthContext)
+    const navigate = useNavigate()
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null
     )
@@ -37,14 +47,23 @@ function Header() {
         setAnchorElNav(null)
     }
 
-    const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = (action: string) => {
         setAnchorElUser(null)
+        switch (action) {
+            case 'logout':
+                context?.logOut()
+                break
+            default:
+                return null
+        }
     }
 
     const userName = context?.user?.username[0]
     return (
         <AppBar position="static">
-            <Container maxWidth="xl">
+            <Container
+                sx={{ width: '90%', maxWidth: '1140px', margin: '0 auto' }}
+            >
                 <Toolbar disableGutters>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
                         <Logo />
@@ -124,45 +143,104 @@ function Header() {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton
-                                onClick={handleOpenUserMenu}
-                                sx={{ p: 0 }}
-                            >
-                                <Avatar>{userName}</Avatar>
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem
-                                    key={setting}
-                                    onClick={handleCloseUserMenu}
+                        {context?.user ? (
+                            <>
+                                <Tooltip title="Open settings">
+                                    <IconButton
+                                        onClick={handleOpenUserMenu}
+                                        sx={{ p: 0 }}
+                                    >
+                                        <Avatar>{userName}</Avatar>
+                                        <Typography
+                                            variant="h4"
+                                            color="#fff"
+                                            sx={{
+                                                marginLeft: 1,
+                                                textTransform: 'capitalize',
+                                            }}
+                                        >
+                                            {context?.user?.username}
+                                        </Typography>
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
                                 >
-                                    <Typography textAlign="center">
-                                        {setting}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
+                                    {SETTINGS.map((setting) => (
+                                        <MenuItem
+                                            key={setting.action}
+                                            onClick={() =>
+                                                handleCloseUserMenu(
+                                                    setting.action
+                                                )
+                                            }
+                                        >
+                                            <Typography textAlign="center">
+                                                {setting.name}
+                                            </Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </>
+                        ) : (
+                            <Box>
+                                <LButton
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => navigate('/login')}
+                                >
+                                    Log in
+                                </LButton>
+                                <SButton
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={() => navigate('/register')}
+                                >
+                                    Sign up
+                                </SButton>
+                            </Box>
+                        )}
                     </Box>
                 </Toolbar>
             </Container>
         </AppBar>
     )
 }
+
+const LButton = styled(Button)`
+    background-color: ${shades.special[100]};
+    color: #fff;
+    font-weight: bold;
+    texttransform: 'unset';
+    margin-right: 10px;
+    &:hover {
+        background-color: ${shades.primary[500]};
+        border-color: ${shades.special[100]};
+        color: ${shades.special[100]};
+`
+const SButton = styled(Button)`
+    border-color: ${shades.special[100]};
+    color: ${shades.special[100]};
+    font-weight: bold;
+    texttransform: 'unset';
+    &:hover {
+        background-color: ${shades.special[100]};
+        border-color: ${shades.special[100]};
+        color: #fff;
+    }
+`
+
 export default Header

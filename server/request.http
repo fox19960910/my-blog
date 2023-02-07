@@ -12,8 +12,8 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-"username":"Tim",
-"password":"1234"
+"username":"tung",
+"password":"tung"
 }
 
 ###
@@ -23,10 +23,11 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUyNDk3MTh9.8CkXMyrBSlXm3QmFvHqh1jOrBKbFNzL6hPUbb1R_dDU
 
 {
-"title":"third post",
-"description":"my third description",
+"title":"The beautiful girl standing on a balcony of apartments looking at the seaside.",
+"description":"Fashion Young Handsome Man in Casual Watch",
 "url":"goole.com",
-"status": "LEARNING"
+"category":"Travel",
+"image":"https://new.axilthemes.com/demo/react/blogar/images/posts/lifestyle-post-03.webp?imwidth=1920"
 }
 
 ###

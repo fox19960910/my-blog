@@ -6,6 +6,7 @@ import AuthContextProvider from './contexts/AuthContext'
 import DashBoard from './pages/Dashboard'
 import PrivateRoute from './Router/PrivateRoute'
 import { SnackbarProvider } from 'notistack'
+import PostContextProvider from './contexts/PostContext'
 const ScrollToTop = () => {
     const { pathname } = useLocation()
 
@@ -26,23 +27,28 @@ function App() {
             maxSnack={5}
         >
             <AuthContextProvider>
-                <BrowserRouter>
-                    <ScrollToTop />
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/" element={<PrivateRoute />}>
-                            <Route path="dashboard" element={<DashBoard />} />
-                        </Route>
-                        <Route
-                            path="/login"
-                            element={<Authenication path="login" />}
-                        />
-                        <Route
-                            path="/register"
-                            element={<Authenication path="register" />}
-                        />
-                    </Routes>
-                </BrowserRouter>
+                <PostContextProvider>
+                    <BrowserRouter>
+                        <ScrollToTop />
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/" element={<PrivateRoute />}>
+                                <Route
+                                    path="dashboard"
+                                    element={<DashBoard />}
+                                />
+                            </Route>
+                            <Route
+                                path="/login"
+                                element={<Authenication path="login" />}
+                            />
+                            <Route
+                                path="/register"
+                                element={<Authenication path="register" />}
+                            />
+                        </Routes>
+                    </BrowserRouter>
+                </PostContextProvider>
             </AuthContextProvider>
         </SnackbarProvider>
     )

@@ -28,6 +28,7 @@ export const AuthContext = createContext<
           registerUser: (
               userForm: IRegisterForm
           ) => Promise<LoginReturn | undefined>
+          logOut: () => void
       }
     | undefined
 >(undefined)
@@ -48,8 +49,6 @@ const AuthContextProvider = ({ children }: Props) => {
                 '/api/auth'
             )
             if (response.success) {
-                console.log('dispatch')
-
                 dispatch({
                     type: 'SET_AUTH',
                     payload: {
@@ -129,6 +128,17 @@ const AuthContextProvider = ({ children }: Props) => {
         }
     }
 
+    //Logout
+    const logOut = () => {
+        removeStorage(LC_TOKEN_NAME)
+        dispatch({
+            type: 'SET_AUTH',
+            payload: {
+                isAuthenticated: false,
+                user: null,
+            },
+        })
+    }
     useEffect(() => {
         checkAuth()
     }, [])
@@ -138,6 +148,7 @@ const AuthContextProvider = ({ children }: Props) => {
         <AuthContext.Provider
             value={{
                 loginUser,
+                logOut,
                 authLoading,
                 isAuthenticated,
                 user,
