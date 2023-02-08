@@ -7,6 +7,7 @@ import DashBoard from './pages/Dashboard'
 import PrivateRoute from './Router/PrivateRoute'
 import { SnackbarProvider } from 'notistack'
 import PostContextProvider from './contexts/PostContext'
+import BlogDetail from './pages/Blog/BlogDetail'
 const ScrollToTop = () => {
     const { pathname } = useLocation()
 
@@ -36,6 +37,10 @@ function App() {
                                 <Route
                                     path="dashboard"
                                     element={<DashBoard />}
+                                />
+                                <Route
+                                    path="post/:id"
+                                    element={<BlogDetail />}
                                 />
                             </Route>
                             <Route

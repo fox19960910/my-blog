@@ -1,10 +1,10 @@
-import React from 'react'
 import Box from '@mui/material/Box'
-
+import { useNavigate } from 'react-router-dom'
 type Props = {
     size?: 'sm' | 'md' | 'lg'
 }
 function Logo({ size = 'md' }: Props) {
+    const navigate = useNavigate()
     const logoSize = () => {
         switch (size) {
             case 'sm':
@@ -20,7 +20,9 @@ function Logo({ size = 'md' }: Props) {
             sx={{
                 typography: logoSize(),
                 fontFamily: ['Itim', 'cursive'].join(','),
+                cursor: 'pointer',
             }}
+            onClick={() => navigate('/')}
         >
             Tim.
         </Box>

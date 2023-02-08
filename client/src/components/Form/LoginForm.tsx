@@ -56,6 +56,7 @@ const LoginForm = () => {
                             name="email"
                             form={form}
                             rules={{ required: true }}
+                            placecholder="Email"
                         />
                     </Box>
                     <Box mt={2}>
@@ -64,6 +65,7 @@ const LoginForm = () => {
                             type="password"
                             form={form}
                             rules={{ required: true }}
+                            placecholder="Password"
                         />
                     </Box>
                 </Box>

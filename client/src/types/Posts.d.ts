@@ -6,4 +6,5 @@ interface Ipost {
     status: string
     user: string
     category: string
+    body: string
 }

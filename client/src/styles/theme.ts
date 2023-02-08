@@ -3,6 +3,7 @@ import { ThemeOptions, createTheme } from '@mui/material/styles'
 
 export const shades = {
     primary: {
+        50: '#dddddd',
         100: '#cccccc',
         200: '#999999',
         300: '#666666',

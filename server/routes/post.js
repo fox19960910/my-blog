@@ -6,10 +6,8 @@ const verifyToken = require('../middleware/auth')
 
 // @route GET api/posts
 // @desc Get all post
-// @access Private
+// @access Public
 router.get('/', async (req, res) => {
-    const postsl = await Post.find({ user: req.userId })
-    console.log(postsl)
     try {
         const posts = await Post.find().populate('user', ['username'])
 
@@ -23,17 +21,37 @@ router.get('/', async (req, res) => {
 })
 
 // @route GET api/posts
+// @desc Get detail post
+// @access Public
+router.get('/:id', async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id)
+        if (!post) {
+            return res.json({
+                success: false,
+                message: 'post_not_found',
+                data: null,
+            })
+        }
+        res.json({ success: true, message: 'successfully', data: post })
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        })
+    }
+})
+
+// @route GET api/posts
 // @desc Get post by user
 // @access Private
 router.get('/my-post', verifyToken, async (req, res) => {
-    const postsl = await Post.find({ user: req.userId })
-    console.log(postsl)
     try {
         const posts = await Post.find({ user: req.userId }).populate('user', [
             'username',
         ])
 
-        res.json({ success: true, data: posts })
+        res.json({ success: true, message: 'successfully', data: posts })
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -47,7 +65,8 @@ router.get('/my-post', verifyToken, async (req, res) => {
 // @access Private
 
 router.post('/', verifyToken, async (req, res) => {
-    const { title, description, url, status, image, category } = req.body
+    const { title, description, status, image, category, body } = req.body
+
     //Validation1
     if (!title) {
         return res
@@ -59,15 +78,21 @@ router.post('/', verifyToken, async (req, res) => {
             title,
             description,
             image,
-            url: url.startsWith('https://') ? url : `https://${url}`,
+            // url: url.startsWith('https://') ? url : `https://${url}`,
             status: status || 'TO LEARN',
             user: req.userId,
             category,
+            body,
         })
         await newPost.save()
 
-        res.json({ success: true, message: 'successfully', post: newPost })
+        res.json({
+            success: true,
+            message: 'post_crete_succefully',
+            data: newPost,
+        })
     } catch (error) {
+        console.log('req.error', error)
         res.status(500).json({
             success: false,
             message: 'Internal server error',

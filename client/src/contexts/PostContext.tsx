@@ -13,13 +13,24 @@ type Props = {
 
 type TPostsReturn = {
     data: Array<Ipost>
+    message: messge_code
     success: boolean
+}
+
+type TbodyPost = {
+    title: string
+    description: string
+    category: 'accessory' | 'travel' | 'food'
+    body: string
 }
 export const PostContext = createContext<
     | {
           postLoading: boolean
           posts: Array<Ipost> | []
+          postDetail: Ipost
           getAllPost: () => Promise<TPostsReturn | undefined>
+          getDetailPost: (id: string) => Promise<TPostsReturn | undefined>
+          createPost: (post: TbodyPost) => Promise<TPostsReturn | undefined>
       }
     | undefined
 >(undefined)
@@ -28,7 +39,8 @@ const PostContextProvider = ({ children }: Props) => {
     const { enqueueSnackbar } = useSnackbar()
     const [postState, dispatch] = useReducer(postReducer, {
         postLoading: true,
-        posts: false,
+        posts: null,
+        postDetail: null,
     })
 
     // check Authenication
@@ -56,13 +68,63 @@ const PostContextProvider = ({ children }: Props) => {
         }
     }
 
-    const { postLoading, posts } = postState
+    const getDetailPost = async (id: string) => {
+        try {
+            const response = await axiosInstance.get<{}, TPostsReturn>(
+                `/api/posts/${id}`
+            )
+            if (response.success) {
+                dispatch({
+                    type: 'SET_DETAIL_POST',
+                    payload: {
+                        postDetail: response.data,
+                    },
+                })
+                return response
+            }
+        } catch (err) {
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
+        }
+    }
+
+    // Post a blog
+
+    const createPost = async (post: TbodyPost) => {
+        try {
+            const response = await axiosInstance.post<TbodyPost, TPostsReturn>(
+                'api/posts',
+                post
+            )
+            if (response.success) {
+                const message = response.message
+                enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                    variant: 'success',
+                })
+                return response
+            }
+        } catch (err) {
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
+        }
+    }
+
+    const { postLoading, posts, postDetail } = postState
     return (
         <PostContext.Provider
             value={{
                 postLoading,
                 posts,
+                postDetail,
                 getAllPost,
+                createPost,
+                getDetailPost,
             }}
         >
             {children}

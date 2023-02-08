@@ -1,50 +1,54 @@
 import styled from '@emotion/styled'
 import { FormHelperText, TextField } from '@mui/material'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import React from 'react'
 import { Controller, RegisterOptions, UseFormReturn } from 'react-hook-form'
 import { renderError } from '../../helper/handleError'
+type itemData = { label: string; value: string | number }
 type Props = {
     form: UseFormReturn<any>
-    type?: React.HTMLInputTypeAttribute
-    variant?: 'standard' | 'filled' | 'outlined'
     name: string
     placecholder?: string
     rules?: Omit<
         RegisterOptions<any, string>,
         'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
     >
-    multiline?: boolean
-    rows?: number
+    data: Array<itemData>
 }
 
-export default function InputFiled({
+export default function SelectField({
     form,
-    type = 'text',
-    variant = 'standard',
+    data,
     name,
     rules,
     placecholder,
-    multiline,
-    rows,
 }: Props) {
     const { control, formState } = form
+    console.log('formState.errors', formState?.errors[name])
+
     return (
-        <>
+        <FormControl fullWidth>
+            <InputLabel id={name}>{placecholder}</InputLabel>
             <Controller
                 name={name}
                 control={control}
                 rules={rules}
                 render={({ field }) => (
-                    <StyleInput
-                        {...field}
-                        type={type}
-                        fullWidth
-                        variant={variant}
-                        error={!!formState.errors[name]}
+                    <Select
+                        labelId={name}
                         label={placecholder}
-                        multiline={multiline}
-                        rows={rows}
-                    />
+                        {...field}
+                        error={!!formState.errors[name]}
+                    >
+                        {data.map((item: itemData) => (
+                            <MenuItem key={item.value} value={item.value}>
+                                {item.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 )}
             />
             {!!formState.errors[name] && (
@@ -55,12 +59,6 @@ export default function InputFiled({
                     <>{renderError(formState.errors, name)}</>
                 </FormHelperText>
             )}
-        </>
+        </FormControl>
     )
 }
-
-const StyleInput = styled(TextField)`
-    & .MuiInput-input {
-        padding: 10px 5px;
-    }
-`

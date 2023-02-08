@@ -53,6 +53,9 @@ function Header() {
             case 'logout':
                 context?.logOut()
                 break
+            case 'dashboard':
+                navigate('/dashboard')
+                break
             default:
                 return null
         }
@@ -60,19 +63,27 @@ function Header() {
 
     const userName = context?.user?.username[0]
     return (
-        <AppBar position="static">
+        <AppBar
+            position="static"
+            sx={{
+                background: '#fff',
+                color: shades.primary[500],
+                boxShadow: 'unset',
+                borderBottom: `1.75px solid ${shades.primary[50]}`,
+            }}
+        >
             <Container
                 sx={{ width: '90%', maxWidth: '1140px', margin: '0 auto' }}
             >
                 <Toolbar disableGutters>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+                    {/* <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
                         <Logo />
-                    </Box>
+                    </Box> */}
 
                     <Box
                         sx={{
                             flexGrow: 1,
-                            display: { xs: 'flex', md: 'none' },
+                            // display: { xs: 'flex', md: 'none' },
                         }}
                     >
                         <IconButton
@@ -117,7 +128,7 @@ function Header() {
                     </Box>
                     <Box
                         sx={{
-                            display: { xs: 'flex', md: 'none' },
+                            // display: { xs: 'flex', md: 'none' },
                             mr: 1,
                             flexGrow: 1,
                         }}
@@ -125,7 +136,7 @@ function Header() {
                         <Logo />
                     </Box>
 
-                    <Box
+                    {/* <Box
                         sx={{
                             flexGrow: 1,
                             display: { xs: 'none', md: 'flex' },
@@ -140,7 +151,7 @@ function Header() {
                                 {page}
                             </Button>
                         ))}
-                    </Box>
+                    </Box> */}
 
                     <Box sx={{ flexGrow: 0 }}>
                         {context?.user ? (
@@ -153,7 +164,7 @@ function Header() {
                                         <Avatar>{userName}</Avatar>
                                         <Typography
                                             variant="h4"
-                                            color="#fff"
+                                            color={shades.primary[500]}
                                             sx={{
                                                 marginLeft: 1,
                                                 textTransform: 'capitalize',
@@ -226,6 +237,7 @@ const LButton = styled(Button)`
     font-weight: bold;
     texttransform: 'unset';
     margin-right: 10px;
+    border-color: ${shades.special[100]};
     &:hover {
         background-color: ${shades.primary[500]};
         border-color: ${shades.special[100]};

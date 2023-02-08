@@ -27,6 +27,9 @@ const PostSchema = new Schema({
         type: Schema.Types.String,
         ref: 'categories',
     },
+    body: {
+        type: String,
+    },
 })
 
 module.exports = mongoose.model('posts', PostSchema)
