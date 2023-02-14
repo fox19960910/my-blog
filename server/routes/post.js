@@ -4,12 +4,14 @@ const router = express.Router()
 const Post = require('../models/Post')
 const verifyToken = require('../middleware/auth')
 
-// @route GET api/posts
-// @desc Get all post
-// @access Public
+// // @route GET api/posts
+// // @desc Get all post
+// // @access Public
 router.get('/', async (req, res) => {
     try {
-        const posts = await Post.find().populate('user', ['username'])
+        const posts = await Post.find()
+            .populate('user', ['username'])
+            .sort({ _id: -1 })
 
         res.json({ success: true, data: posts })
     } catch (err) {
@@ -20,10 +22,10 @@ router.get('/', async (req, res) => {
     }
 })
 
-// @route GET api/posts
-// @desc Get detail post
-// @access Public
-router.get('/:id', async (req, res) => {
+// // @route GET api/posts
+// // @desc Get detail post
+// // @access Public
+router.get('/detail/:id', async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
         if (!post) {
@@ -46,16 +48,19 @@ router.get('/:id', async (req, res) => {
 // @desc Get post by user
 // @access Private
 router.get('/my-post', verifyToken, async (req, res) => {
+    console.log('hereee')
     try {
-        const posts = await Post.find({ user: req.userId }).populate('user', [
-            'username',
-        ])
+        const posts = await Post.find({ user: req.userId })
+            .populate('user', ['username'])
+            .sort({ _id: -1 })
 
         res.json({ success: true, message: 'successfully', data: posts })
     } catch (err) {
+        console.log('err', err)
         res.status(500).json({
             success: false,
-            message: 'Internal server error',
+            message: '123',
+            err: err,
         })
     }
 })
@@ -105,7 +110,7 @@ router.post('/', verifyToken, async (req, res) => {
 // @access Private
 
 router.put('/:id', verifyToken, async (req, res) => {
-    const { title, description, url, status } = req.body
+    const { title, description, image, status, category } = req.body
     //Validation
     if (!title) {
         return res
@@ -116,11 +121,14 @@ router.put('/:id', verifyToken, async (req, res) => {
         let updatePost = {
             title,
             description,
-            url: url.startsWith('https://') ? url : `https://${url}`,
+            // url: url.startsWith('https://') ? url : `https://${url}`,
+            image,
+            category,
             status: status || 'TO LEARN',
             user: req.userId,
         }
         const postUpdateCondition = { _id: req.params.id, user: req.userId }
+
         updatePost = await Post.findOneAndUpdate(
             postUpdateCondition,
             updatePost,
@@ -137,6 +145,7 @@ router.put('/:id', verifyToken, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Internal server error',
+            err: error,
         })
     }
 })

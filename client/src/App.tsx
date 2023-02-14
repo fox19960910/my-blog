@@ -8,6 +8,8 @@ import PrivateRoute from './Router/PrivateRoute'
 import { SnackbarProvider } from 'notistack'
 import PostContextProvider from './contexts/PostContext'
 import BlogDetail from './pages/Blog/BlogDetail'
+import UpdatePost from './pages/UpdatePost'
+import CreatePost from './pages/CreatePost'
 const ScrollToTop = () => {
     const { pathname } = useLocation()
 
@@ -35,8 +37,17 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/" element={<PrivateRoute />}>
                                 <Route
-                                    path="dashboard"
+                                    path="dashboard/"
                                     element={<DashBoard />}
+                                />
+
+                                <Route
+                                    path="create-post"
+                                    element={<CreatePost />}
+                                />
+                                <Route
+                                    path="update-post/:id"
+                                    element={<UpdatePost />}
                                 />
                                 <Route
                                     path="post/:id"

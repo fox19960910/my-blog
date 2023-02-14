@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './Header'
 import { Box } from '@mui/system'
 import styled from '@emotion/styled'
+import { PAGE_WIDTH } from '../../contants/message'
 
 type Props = {
     children: React.ReactNode
@@ -29,7 +30,7 @@ function Template({ children, size = 'md' }: Props) {
     )
 }
 const TemplateBody = styled(Box)`
-    max-width: 1140px;
+    max-width: ${PAGE_WIDTH}px;
     margin: 0 auto;
     height: 100%;
     padding-top: 60px;

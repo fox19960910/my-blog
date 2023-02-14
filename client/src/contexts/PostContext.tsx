@@ -1,10 +1,8 @@
-import { createContext, useReducer, useEffect } from 'react'
-import { authReducer } from './reducers/authReducer'
-import axiosInstance from '../helper/axios'
-import { getStorage, removeStorage, setStorage } from '../helper/localStorage'
-import { LC_TOKEN_NAME, returnError } from './constants'
 import { useSnackbar } from 'notistack'
+import { createContext, useReducer } from 'react'
 import { MESSAGE, messge_code } from '../contants/message'
+import axiosInstance from '../helper/axios'
+import { returnError } from './constants'
 import { postReducer } from './reducers/postReducer'
 
 type Props = {
@@ -17,20 +15,32 @@ type TPostsReturn = {
     success: boolean
 }
 
+type TDetailPostReturn = {
+    data: Ipost
+    message: messge_code
+    success: boolean
+}
+
 type TbodyPost = {
     title: string
     description: string
     category: 'accessory' | 'travel' | 'food'
-    body: string
+    body: string | undefined
 }
 export const PostContext = createContext<
     | {
           postLoading: boolean
           posts: Array<Ipost> | []
+          myposts: Array<Ipost> | []
           postDetail: Ipost
           getAllPost: () => Promise<TPostsReturn | undefined>
-          getDetailPost: (id: string) => Promise<TPostsReturn | undefined>
+          getMyPost: () => Promise<TPostsReturn | undefined>
+          getDetailPost: (id: string) => Promise<Ipost | undefined>
           createPost: (post: TbodyPost) => Promise<TPostsReturn | undefined>
+          updatePost: (
+              id: string,
+              post: TbodyPost
+          ) => Promise<Ipost | undefined>
       }
     | undefined
 >(undefined)
@@ -41,6 +51,7 @@ const PostContextProvider = ({ children }: Props) => {
         postLoading: true,
         posts: null,
         postDetail: null,
+        myposts: null,
     })
 
     // check Authenication
@@ -68,10 +79,33 @@ const PostContextProvider = ({ children }: Props) => {
         }
     }
 
-    const getDetailPost = async (id: string) => {
+    const getMyPost = async () => {
         try {
             const response = await axiosInstance.get<{}, TPostsReturn>(
-                `/api/posts/${id}`
+                '/api/posts/my-post'
+            )
+            if (response.success) {
+                dispatch({
+                    type: 'SET_MY_POST',
+                    payload: {
+                        myposts: response.data,
+                    },
+                })
+                return response
+            }
+        } catch (err) {
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
+        }
+    }
+
+    const getDetailPost = async (id: string) => {
+        try {
+            const response = await axiosInstance.get<{}, TDetailPostReturn>(
+                `/api/posts/detail/${id}`
             )
             if (response.success) {
                 dispatch({
@@ -80,7 +114,7 @@ const PostContextProvider = ({ children }: Props) => {
                         postDetail: response.data,
                     },
                 })
-                return response
+                return response.data
             }
         } catch (err) {
             const error = err as returnError
@@ -114,17 +148,39 @@ const PostContextProvider = ({ children }: Props) => {
             })
         }
     }
+    // update  a blog
 
-    const { postLoading, posts, postDetail } = postState
+    const updatePost = async (id: string, post: TbodyPost) => {
+        try {
+            const response = await axiosInstance.put<{}, TDetailPostReturn>(
+                `/api/posts/${id}`,
+                post
+            )
+            if (response.success) {
+                return response.data
+            }
+        } catch (err) {
+            const error = err as returnError
+            const message = error.message
+            enqueueSnackbar(MESSAGE?.[message] || MESSAGE.something_wrong, {
+                variant: 'error',
+            })
+        }
+    }
+
+    const { postLoading, posts, postDetail, myposts } = postState
     return (
         <PostContext.Provider
             value={{
                 postLoading,
                 posts,
+                myposts,
                 postDetail,
                 getAllPost,
                 createPost,
                 getDetailPost,
+                getMyPost,
+                updatePost,
             }}
         >
             {children}

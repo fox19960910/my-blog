@@ -23,7 +23,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUyNDk3MTh9.8CkXMyrBSlXm3QmFvHqh1jOrBKbFNzL6hPUbb1R_dDU
 
 {
-"title":"The beautiful girl standing on a balcony of apartments looking at the seaside.",
+"title":"The beautiful girl",
 "description":"Fashion Young Handsome Man in Casual Watch",
 "url":"goole.com",
 "category":"Travel",
@@ -32,9 +32,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhN
 
 ###
 
-GET http://localhost:5000/api/posts
+GET http://localhost:5000/api/posts/my
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2RhNDgzNmJkODZhMDlkYzk0M2RmNTQiLCJpYXQiOjE2NzUzMDk2NzJ9.rHPfphIsBeNdm5PasoMlhsVe5mgcriHUJUJICfHX4YI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2I5MzljZWUyNmViN2M0OThhNjA4OGEiLCJpYXQiOjE2NzYzNDQ5NzZ9.iY5VxB3S-XNWmykyWm9PKbd1nrAB1xyxpp7jkIUsEUw
 
 ###
 

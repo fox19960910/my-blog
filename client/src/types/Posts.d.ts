@@ -4,7 +4,8 @@ interface Ipost {
     description: string
     image: string
     status: string
-    user: string
-    category: string
+    user: Iuser
+    category: 'accessory' | 'travel' | 'food'
     body: string
+    createAt: string
 }

@@ -16,12 +16,15 @@ import { AuthContext } from '../../contexts/AuthContext'
 import styled from '@emotion/styled'
 import { shades } from '../../styles/theme'
 import { useNavigate } from 'react-router-dom'
-
+import { PAGE_WIDTH } from '../../contants/message'
+import { stringAvatar } from '../../helper/utils'
+import { Badge, Stack } from '@mui/material'
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 const pages = ['Blog']
 
 const SETTINGS = [
     { action: 'profile', name: 'Profile' },
-    { action: 'account', name: 'Account' },
+    { action: 'mypost', name: 'My Post' },
     { action: 'dashboard', name: 'Dashboard' },
     { action: 'logout', name: 'Logout' },
 ]
@@ -56,12 +59,14 @@ function Header() {
             case 'dashboard':
                 navigate('/dashboard')
                 break
+            case 'mypost':
+                navigate('/my-post')
+                break
             default:
                 return null
         }
     }
 
-    const userName = context?.user?.username[0]
     return (
         <AppBar
             position="static"
@@ -72,18 +77,17 @@ function Header() {
                 borderBottom: `1.75px solid ${shades.primary[50]}`,
             }}
         >
-            <Container
-                sx={{ width: '90%', maxWidth: '1140px', margin: '0 auto' }}
+            <Box
+                sx={{
+                    width: '90%',
+                    maxWidth: PAGE_WIDTH + 'px !important',
+                    margin: '0 auto',
+                }}
             >
                 <Toolbar disableGutters>
-                    {/* <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                        <Logo />
-                    </Box> */}
-
                     <Box
                         sx={{
                             flexGrow: 1,
-                            // display: { xs: 'flex', md: 'none' },
                         }}
                     >
                         <IconButton
@@ -93,6 +97,7 @@ function Header() {
                             aria-haspopup="true"
                             onClick={handleOpenNavMenu}
                             color="inherit"
+                            sx={{ paddingLeft: 0 }}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -128,7 +133,6 @@ function Header() {
                     </Box>
                     <Box
                         sx={{
-                            // display: { xs: 'flex', md: 'none' },
                             mr: 1,
                             flexGrow: 1,
                         }}
@@ -136,76 +140,68 @@ function Header() {
                         <Logo />
                     </Box>
 
-                    {/* <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: 'none', md: 'flex' },
-                        }}
-                    >
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
-                    </Box> */}
-
                     <Box sx={{ flexGrow: 0 }}>
                         {context?.user ? (
-                            <>
-                                <Tooltip title="Open settings">
-                                    <IconButton
-                                        onClick={handleOpenUserMenu}
-                                        sx={{ p: 0 }}
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                                alignItems="center"
+                            >
+                                <Badge color="secondary" variant="dot">
+                                    <NotificationsNoneIcon />
+                                </Badge>
+                                <Box>
+                                    <Tooltip title="Open settings">
+                                        <IconButton
+                                            onClick={handleOpenUserMenu}
+                                            sx={{ p: 0 }}
+                                        >
+                                            {context?.user?.image ? (
+                                                <Avatar
+                                                    src={context?.user?.image}
+                                                />
+                                            ) : (
+                                                <Avatar
+                                                    {...stringAvatar(
+                                                        context?.user?.username
+                                                    )}
+                                                />
+                                            )}
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Menu
+                                        sx={{ mt: '45px' }}
+                                        id="menu-appbar"
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
                                     >
-                                        <Avatar>{userName}</Avatar>
-                                        <Typography
-                                            variant="h4"
-                                            color={shades.primary[500]}
-                                            sx={{
-                                                marginLeft: 1,
-                                                textTransform: 'capitalize',
-                                            }}
-                                        >
-                                            {context?.user?.username}
-                                        </Typography>
-                                    </IconButton>
-                                </Tooltip>
-                                <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    {SETTINGS.map((setting) => (
-                                        <MenuItem
-                                            key={setting.action}
-                                            onClick={() =>
-                                                handleCloseUserMenu(
-                                                    setting.action
-                                                )
-                                            }
-                                        >
-                                            <Typography textAlign="center">
-                                                {setting.name}
-                                            </Typography>
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                            </>
+                                        {SETTINGS.map((setting) => (
+                                            <MenuItem
+                                                key={setting.action}
+                                                onClick={() =>
+                                                    handleCloseUserMenu(
+                                                        setting.action
+                                                    )
+                                                }
+                                            >
+                                                <Typography textAlign="center">
+                                                    {setting.name}
+                                                </Typography>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                </Box>
+                            </Stack>
                         ) : (
                             <Box>
                                 <LButton
@@ -226,7 +222,7 @@ function Header() {
                         )}
                     </Box>
                 </Toolbar>
-            </Container>
+            </Box>
         </AppBar>
     )
 }

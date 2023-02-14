@@ -15,3 +15,5 @@ export const MESSAGE = {
         'Your email or password is incorrect',
     [messge_code.something_wrong]: 'Something went wrong!!!',
 }
+
+export const PAGE_WIDTH = 1440

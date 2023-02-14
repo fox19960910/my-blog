@@ -6,6 +6,7 @@ const SHeading = styled(Typography)`
     letter-spacing: -2px;
     display: flex;
     align-items: flex-end;
+    font-size: 28px;
 `
 const Dot = styled.div`
     background-color: ${shades.special[100]};
