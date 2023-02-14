@@ -31,6 +31,6 @@ app.use(express.json())
 app.use('/api/auth', authRouter)
 app.use('/api/posts', postRouter)
 
-const PORT = 5000
+const PORT = process.env.PORT
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
